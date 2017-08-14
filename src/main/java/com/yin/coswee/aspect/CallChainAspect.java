@@ -7,11 +7,8 @@
  */
 package com.yin.coswee.aspect;
 
-import com.yin.coswee.aspect.model.MethodCost;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
+import com.yin.coswee.listener.CallChainAspectListener;
+import com.yin.coswee.model.MethodCost;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+
 /**
  * 调用连切片
  *
@@ -27,8 +27,7 @@ import java.util.Stack;
  * @version V1.0
  * @since 2017-08-10 16:08
  */
-@Aspect
-public class CallChainAspect {
+public class CallChainAspect implements MethodInterceptor {
 
     private static List<Map<String,MethodCost>> allCallHis= Collections
         .synchronizedList(new ArrayList<Map<String,MethodCost>>());
@@ -47,17 +46,13 @@ public class CallChainAspect {
             return new Stack<String>();
         }
     };
-    @Around("within(com.greenline..*) "
-        + "and !within(com.greenline.hrs.biz.external..*)"
-        + "and !within(com.greenline.hrs.biz.manager.external..*)"
-
-        + "or within(org.slf4j.impl..*)"
-    )
-    public Object aspectAll(ProceedingJoinPoint proceed) throws Throwable{
+    public Object invoke(MethodInvocation method) throws Throwable {
+        if(! CallChainAspectListener.WEB_STARTED){
+            return method.proceed();
+        }
         //方法基本信息获取
-        MethodSignature sign = (MethodSignature)proceed.getSignature();
-        final String typeName = sign.getDeclaringTypeName();
-        final String methodName = sign.getMethod().getName();
+        final String typeName = "";
+        final String methodName = method.getMethod().getName();
         final String methodFullName = typeName + "." + methodName;
 
         //将方法信息保存到threadLocal,后面格式化输出
@@ -100,11 +95,10 @@ public class CallChainAspect {
         String treeSpace = getTreeSpace(deep);
         System.out.println(treeSpace + methodFullName + " 方法开始");
 
-        Object[] args = proceed.getArgs();
 
 
         final long n1 = System.nanoTime();
-        final Object result = proceed.proceed(args);
+        final Object result = method.proceed();
         final long n2 = System.nanoTime();
 
 

@@ -1,17 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/context
-            http://www.springframework.org/schema/context/spring-context.xsd
-            http://www.springframework.org/schema/aop
-            http://www.springframework.org/schema/aop/spring-aop.xsd">
+			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <aop:aspectj-autoproxy />
+    <aop:config proxy-target-class="true">
+        <aop:pointcut id="toInspect" expression="within(com.greenline..*)
+                                            and !within(com.greenline.hrs.biz.external..*)
+                                and !within(com.greenline.hrs.biz.manager.external..*)
+                                and !within(com.greenline.hrs.register.spring..*)
+                                and !within(com.greenline.hrs.register.biz.dal.guid..*)
+                                and !within(com.greenline..*.util..*)"/>
+        <aop:advisor advice-ref="callChainAspect" pointcut-ref="toInspect"/>
+    </aop:config>
 
-    <!-- 支持注解配置 -->
-    <context:annotation-config/>
-
-    <!-- aop config -->
-    <aop:aspectj-autoproxy/>
     <bean id="callChainAspect" class="com.yin.coswee.aspect.CallChainAspect"/>
 </beans>

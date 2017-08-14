@@ -12,7 +12,7 @@
  * accordance with the terms of the license agreement you entered into
  * with Greenline.com.
  */
-package com.yin.coswee.aspect.model;
+package com.yin.coswee.model;
 
 /**
  * TODO
