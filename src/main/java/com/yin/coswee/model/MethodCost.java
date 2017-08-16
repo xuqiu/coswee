@@ -15,7 +15,7 @@
 package com.yin.coswee.model;
 
 /**
- * TODO
+ * 方法消耗
  *
  * @author yinzhennan
  * @version V1.0
@@ -23,11 +23,14 @@ package com.yin.coswee.model;
  */
 public class MethodCost implements java.io.Serializable {
 
-    String name;
+    String fullName;
     int times;
 
-    String fatherName;
-    String rootName;
+    String fatherKey;
+    String rootKey;
+    String methodName;
+    String typeName;
+    String key;
     int index;
     int deep;
     long costAll;
@@ -37,12 +40,12 @@ public class MethodCost implements java.io.Serializable {
     String threadName;
 
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public int getTimes() {
@@ -61,12 +64,12 @@ public class MethodCost implements java.io.Serializable {
         this.costAll = costAll;
     }
 
-    public String getFatherName() {
-        return fatherName;
+    public String getFatherKey() {
+        return fatherKey;
     }
 
-    public void setFatherName(String fatherName) {
-        this.fatherName = fatherName;
+    public void setFatherKey(String fatherKey) {
+        this.fatherKey = fatherKey;
     }
 
     public int getIndex() {
@@ -101,12 +104,12 @@ public class MethodCost implements java.io.Serializable {
         this.threadName = threadName;
     }
 
-    public String getRootName() {
-        return rootName;
+    public String getRootKey() {
+        return rootKey;
     }
 
-    public void setRootName(String rootName) {
-        this.rootName = rootName;
+    public void setRootKey(String rootKey) {
+        this.rootKey = rootKey;
     }
 
     public long getCostChild() {
@@ -115,5 +118,29 @@ public class MethodCost implements java.io.Serializable {
 
     public void setCostChild(long costChild) {
         this.costChild = costChild;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

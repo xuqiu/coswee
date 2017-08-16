@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.UUID;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -51,45 +52,45 @@ public class CallChainAspect implements MethodInterceptor {
             return method.proceed();
         }
         //方法基本信息获取
-        final String typeName = "";
+        final String typeName = method.getMethod().getDeclaringClass().getName();
         final String methodName = method.getMethod().getName();
         final String methodFullName = typeName + "." + methodName;
+        final String key = methodFullName+"#"+ UUID.randomUUID();
 
         //将方法信息保存到threadLocal,后面格式化输出
         //先获取线程信息
         Integer index = indexTL.get();
         indexTL.set(index+1);
         Stack<String> methodStack = methodStackTL.get();
-        String fatherName = "";
-        String rootName = "";
+
+        String fatherKey = "";
+        String rootKey = "";
         int deep = methodStack.size();
         if(deep==0){
             final Map<String, MethodCost> methodCostMap = new LinkedHashMap<String, MethodCost>();
             methodCostMapTL.set(methodCostMap);
             allCallHis.add(methodCostMap);
         }else if(deep>0){
-            fatherName = methodStack.peek();
-        }else if(deep>1){
-            rootName = methodStack.get(1);
+            fatherKey = methodStack.peek();
+            rootKey = methodStack.get(0);
         }
-        methodStack.push(methodFullName);
+        methodStack.push(key);
+
 
 
         Map<String,MethodCost> methodCostMap = methodCostMapTL.get();
-        MethodCost methodCost = methodCostMap.get(methodFullName);
-        if(methodCost == null) {
-            methodCost = new MethodCost();
-            methodCostMap.put(methodFullName,methodCost);
-        }
-
-        methodCost.setName(methodFullName);
-        methodCost.setFatherName(fatherName);
+        MethodCost methodCost = new MethodCost();
+        methodCost.setKey(key);
+        methodCost.setTypeName(typeName);
+        methodCost.setMethodName(methodName);
+        methodCost.setFullName(methodFullName);
+        methodCost.setFatherKey(fatherKey);
         methodCost.setTimes(methodCost.getTimes()+1);
         methodCost.setDeep(deep);
         methodCost.setIndex(index);
         methodCost.setThreadName(Thread.currentThread().getName());
-        methodCost.setRootName(rootName);
-        methodCostMap.put(methodFullName,methodCost);
+        methodCost.setRootKey(rootKey);
+        methodCostMap.put(key,methodCost);
 
 
         String treeSpace = getTreeSpace(deep);
@@ -109,8 +110,8 @@ public class CallChainAspect implements MethodInterceptor {
 
         methodCost.setCostAll(methodCost.getCostAll()+methodCostTime);
         methodCost.setCostOwn(methodCost.getCostAll()-methodCost.getCostChild());
-        if(fatherName != null && fatherName.trim().length() > 0) {
-            final MethodCost fatherMethod = methodCostMap.get(fatherName);
+        if(fatherKey != null && fatherKey.trim().length() > 0) {
+            final MethodCost fatherMethod = methodCostMap.get(fatherKey);
             fatherMethod.setCostChild(fatherMethod.getCostChild()+methodCostTime);
         }
 
