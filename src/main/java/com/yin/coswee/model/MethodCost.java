@@ -24,8 +24,6 @@ package com.yin.coswee.model;
 public class MethodCost implements java.io.Serializable {
 
     String fullName;
-    int times;
-
     String fatherKey;
     String rootKey;
     String methodName;
@@ -33,9 +31,9 @@ public class MethodCost implements java.io.Serializable {
     String key;
     int index;
     int deep;
-    long costAll;
-    long costOwn;
-    long costChild;
+    int costAll;
+    int costOwn;
+    int costChild;
 
     String threadName;
 
@@ -48,19 +46,11 @@ public class MethodCost implements java.io.Serializable {
         this.fullName = fullName;
     }
 
-    public int getTimes() {
-        return times;
-    }
-
-    public void setTimes(int times) {
-        this.times = times;
-    }
-
-    public long getCostAll() {
+    public int getCostAll() {
         return costAll;
     }
 
-    public void setCostAll(long costAll) {
+    public void setCostAll(int costAll) {
         this.costAll = costAll;
     }
 
@@ -88,11 +78,11 @@ public class MethodCost implements java.io.Serializable {
         this.deep = deep;
     }
 
-    public long getCostOwn() {
+    public int getCostOwn() {
         return costOwn;
     }
 
-    public void setCostOwn(long costOwn) {
+    public void setCostOwn(int costOwn) {
         this.costOwn = costOwn;
     }
 
@@ -112,11 +102,11 @@ public class MethodCost implements java.io.Serializable {
         this.rootKey = rootKey;
     }
 
-    public long getCostChild() {
+    public int getCostChild() {
         return costChild;
     }
 
-    public void setCostChild(long costChild) {
+    public void setCostChild(int costChild) {
         this.costChild = costChild;
     }
 

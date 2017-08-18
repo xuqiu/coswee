@@ -11,6 +11,7 @@
                                 and !within(com.greenline.hrs.register.spring..*)
                                 and !within(com.greenline.hrs.register.biz.dal.guid..*)
                                 and !within(com.greenline.hrs.register.biz.dal.util.mybatis..*)
+                                and !within(com.greenline.hrs.register.service.actor..*)
         "/>
         <aop:advisor advice-ref="callChainAspect" pointcut-ref="toInspect"/>
     </aop:config>

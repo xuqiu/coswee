@@ -8,105 +8,95 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-            crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="http://jonmiles.github.io/bootstrap-treeview/bower_components/jquery/dist/jquery.js"></script>
+    <#--<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
     <script src="http://jonmiles.github.io/bootstrap-treeview/js/bootstrap-treeview.js"></script>
     <style type="text/css" id="treeview1-style"> .treeview .list-group-item {
         cursor: pointer
+    }
+    .bs-docs-header {
+        position: relative;
+        padding: 30px 0;
+        color: #cdbfe3;
+        background-f: #61C400;
+        background-f: #70b100;
+        background-f: #809d00;
+        background-f: #908a00;
+        background-f: #a07600;
+        background-f: #a07600;
+        background-f: #b06200;
+        background-f: #bf4f00;
+        background-f: #cf3b00;
+        background-f: #df2800;
+        background-f: #FF0000;
+        background-f: #FF0000;
+        text-align: center;
+        text-shadow: 0 1px 0 rgba(0,0,0,.1);
+        background-color: #6f5499;
+        background-image: -webkit-gradient(linear,left top,left bottom,from(#563d7c),to(#6f5499));
+        background-image: -webkit-linear-gradient(top,#563d7c 0,#6f5499 100%);
+        background-image: -o-linear-gradient(top,#563d7c 0,#6f5499 100%);
+        background-image: linear-gradient(to bottom,#563d7c 0,#6f5499 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#563d7c', endColorstr='#6F5499', GradientType=0);
+        background-repeat: repeat-x;
+        margin-bottom: 40px;
     }
 
     </style>
 </head>
 <body>
-这个是页面 11
-${treeNodeJsonMap?size}
-<div class="container">
-
-    <div class="row">
-        <div class="col-sm-4">
-            <h2>Node Overrides</h2>
-            <div id="treeview9" class=""></div>
-        </div>
+<div class="bs-docs-header" id="content" tabindex="-1">
+    <div class="container"><h1>Coswee</h1>
+        <p>Show JAVA Spring Web program call chains intuitively, for costing analyze.</p>
     </div>
-
+</div>
+<div class="container">
+    <button id="btn_reload" type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reload Data</button>
+    <button id="btn_clear" type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Clear Data</button>
+    <#list treeNodeJsonMap?keys as key>
+        <div class="row">
+            <div>
+                <h2>${key}</h2>
+                <span id="btn_expand_${key_index}" class="glyphicon glyphicon-resize-full" aria-hidden="true"></span>
+                <div id="tree_${key_index}" class=""></div>
+            </div>
+        </div>
+        <script>
+            var treeData_${key_index}=[${treeNodeJsonMap[key]?string}];
+            $('#tree_${key_index}').treeview({
+                //expandIcon: "glyphicon glyphicon-stop",
+                //collapseIcon: "glyphicon glyphicon-unchecked",
+                //nodeIcon: "glyphicon glyphicon-log-in",
+                //color: "yellow",
+                //backColor: "purple",
+                //onhoverColor: "orange",
+                //borderColor: "red",
+                //showBorder: false,
+                levels: 99,
+                showTags: true,
+                highlightSelected: true,
+                selectedColor: "yellow",
+                selectedBackColor: "darkorange",
+                data: treeData_${key_index}
+            });
+            $('#btn_expand_${key_index}').on('click', function (e) {
+                $('#tree_${key_index}').treeview('expandAll', { levels: 99});
+            });
+        </script>
+    </#list>
     <br/>
 </div>
-<script src="./bower_components/jquery/dist/jquery.js"></script>
-<script src="./js/bootstrap-treeview.js"></script>
-<script type="text/javascript">
-    $(function () {
-        var alternateData = [
-            {
-                text: 'Parent 1',
-                tags: ['2'],
-                nodes: [
-                    {
-                        text: 'Child 1',
-                        tags: ['3'],
-                        nodes: [
-                            {
-                                text: 'Grandchild 1',
-                                tags: ['6']
-                            },
-                            {
-                                text: 'Grandchild 2',
-                                tags: ['3']
-                            }
-                        ]
-                    },
-                    {
-                        text: 'Child 2',
-                        tags: ['3']
-                    }
-                ]
-            },
-            {
-                text: 'Parent 2',
-                tags: ['7']
-            },
-            {
-                text: 'Parent 3',
-                icon: 'glyphicon glyphicon-earphone',
-                href: '#demo',
-                tags: ['11']
-            },
-            {
-                text: 'Parent 4',
-                icon: 'glyphicon glyphicon-cloud-download',
-                href: '/demo.html',
-                tags: ['19'],
-                selected: true
-            },
-            {
-                text: 'Parent 5',
-                icon: 'glyphicon glyphicon-certificate',
-                color: 'pink',
-                backColor: 'red',
-                href: 'http://www.tesco.com',
-                tags: ['available', '0']
-            }
-        ];
-
-        $('#treeview9').treeview({
-            //expandIcon: "glyphicon glyphicon-stop",
-            //collapseIcon: "glyphicon glyphicon-unchecked",
-            //nodeIcon: "glyphicon glyphicon-log-in",
-            //color: "yellow",
-            //backColor: "purple",
-            //onhoverColor: "orange",
-            //borderColor: "red",
-            //showBorder: false,
-            showTags: true,
-            highlightSelected: true,
-            selectedColor: "yellow",
-            selectedBackColor: "darkorange",
-            data: alternateData
-        });
+</body>
+<script>
+    $('#btn_clear').on('click', function (e) {
+        if (confirm("You sure wanna clear all data?")) {
+            $.get("./CallChainServlet?action=clear", function (result) {
+                window.location.reload();
+            });
+        }
+    });
+    $('#btn_reload').on('click', function (e) {
+        window.location.reload();
     });
 </script>
-</body>
-
 </html>

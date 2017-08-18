@@ -9,6 +9,7 @@ package com.yin.coswee.model.transform;
 
 import com.yin.coswee.model.MethodCost;
 import com.yin.coswee.model.TreeNode;
+import com.yin.coswee.util.ColorUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,8 +28,10 @@ import java.util.Map;
 public class TreeNodeTransformer {
     public static TreeNode transMethodCost(MethodCost methodCost){
         TreeNode treeNode = new TreeNode();
+        treeNode.setThreadName(methodCost.getThreadName());
         treeNode.setText(methodCost.getFullName());
-        treeNode.setTags(Arrays.asList(String.valueOf(methodCost.getCostOwn())));
+        treeNode.setTags(Arrays.asList(String.valueOf(methodCost.getCostAll()),String.valueOf(methodCost.getCostOwn())));
+        treeNode.setBackColor(ColorUtil.getTimeCostColor(methodCost.getCostOwn()));
         return treeNode;
     }
 

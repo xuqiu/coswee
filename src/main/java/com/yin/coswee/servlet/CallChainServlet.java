@@ -16,6 +16,7 @@ import com.yin.coswee.util.FreeMakerUtil;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,8 @@ public class CallChainServlet  extends HttpServlet {
             getTreeNode(request, response);
         }else if(action.equals("getPage")){
             getPage(request, response);
+        }else if(action.equals("clear")){
+            clear();
         }
     }
 
@@ -71,7 +74,7 @@ public class CallChainServlet  extends HttpServlet {
         try {
             Map<String, Object> map = new HashMap<String, Object>();
             final List<TreeNode> treeNodeList = TreeNodeTransformer.transMethodCost(CallChainAspect.getAllCallHis());
-            Map<String, String> treeNodeJsonMap = new HashMap<String, String>();
+            Map<String, String> treeNodeJsonMap = new LinkedHashMap<String, String>();
             for (TreeNode treeNode : treeNodeList) {
                 treeNodeJsonMap.put(treeNode.getThreadName(), JSON.toJSONString(treeNode));
             }
@@ -81,6 +84,9 @@ public class CallChainServlet  extends HttpServlet {
         } catch (TemplateException e) {
             e.printStackTrace();
         }
+    }
+    private void clear(){
+        CallChainAspect.clear();
     }
 
 }

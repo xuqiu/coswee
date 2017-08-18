@@ -10,8 +10,10 @@ package com.yin.coswee.aspect;
 import com.yin.coswee.listener.CallChainAspectListener;
 import com.yin.coswee.model.MethodCost;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +37,20 @@ public class CallChainAspect implements MethodInterceptor {
     public static List<Map<String,MethodCost>> getAllCallHis(){
         return allCallHis;
     }
+    public static void clear(){
+        allCallHis= Collections.synchronizedList(new ArrayList<Map<String,MethodCost>>());
+    }
+
 
     private static ThreadLocal<Map<String,MethodCost>> methodCostMapTL = new ThreadLocal<Map<String,MethodCost>>();
     private static ThreadLocal<Integer> indexTL = new ThreadLocal<Integer>(){
         protected synchronized Integer initialValue() {
             return 0;
+        }
+    };
+    private static ThreadLocal<String> threadKey = new ThreadLocal<String>(){
+        protected synchronized String initialValue() {
+            return "";
         }
     };
     private static ThreadLocal<Stack<String>> methodStackTL = new ThreadLocal<Stack<String>>(){
@@ -70,6 +81,8 @@ public class CallChainAspect implements MethodInterceptor {
             final Map<String, MethodCost> methodCostMap = new LinkedHashMap<String, MethodCost>();
             methodCostMapTL.set(methodCostMap);
             allCallHis.add(methodCostMap);
+            //线程会被重用,所以线程key里要加uuid
+            threadKey.set(Thread.currentThread().getName()+"#"+new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()));
         }else if(deep>0){
             fatherKey = methodStack.peek();
             rootKey = methodStack.get(0);
@@ -85,10 +98,9 @@ public class CallChainAspect implements MethodInterceptor {
         methodCost.setMethodName(methodName);
         methodCost.setFullName(methodFullName);
         methodCost.setFatherKey(fatherKey);
-        methodCost.setTimes(methodCost.getTimes()+1);
         methodCost.setDeep(deep);
         methodCost.setIndex(index);
-        methodCost.setThreadName(Thread.currentThread().getName());
+        methodCost.setThreadName(threadKey.get());
         methodCost.setRootKey(rootKey);
         methodCostMap.put(key,methodCost);
 
@@ -108,11 +120,11 @@ public class CallChainAspect implements MethodInterceptor {
 
         methodCostTime=methodCostTime/1000000;
 
-        methodCost.setCostAll(methodCost.getCostAll()+methodCostTime);
+        methodCost.setCostAll((int)methodCostTime);
         methodCost.setCostOwn(methodCost.getCostAll()-methodCost.getCostChild());
         if(fatherKey != null && fatherKey.trim().length() > 0) {
             final MethodCost fatherMethod = methodCostMap.get(fatherKey);
-            fatherMethod.setCostChild(fatherMethod.getCostChild()+methodCostTime);
+            fatherMethod.setCostChild(fatherMethod.getCostChild()+(int)methodCostTime);
         }
 
 
