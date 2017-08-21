@@ -7,6 +7,7 @@
  */
 package com.yin.coswee.model;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class TreeNode {
     private TreeNode parent;
     @JSONField(serialize=false)
     private String threadName;
+    @JSONField(serialize=false)
+    private List<CallTimes> callTimesList;
 
     public void addChild(TreeNode child){
         nodes.add(child);
@@ -109,5 +112,18 @@ public class TreeNode {
 
     public void setThreadName(String threadName) {
         this.threadName = threadName;
+    }
+
+    public List<CallTimes> getCallTimesList() {
+        return callTimesList;
+    }
+
+    public void setCallTimesList(List<CallTimes> callTimesList) {
+        this.callTimesList = callTimesList;
+    }
+
+    @Override
+    public String toString(){
+        return JSON.toJSONString(this);
     }
 }

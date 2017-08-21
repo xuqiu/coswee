@@ -7,6 +7,7 @@
  */
 package com.yin.coswee.model.transform;
 
+import com.yin.coswee.model.CallTimes;
 import com.yin.coswee.model.MethodCost;
 import com.yin.coswee.model.TreeNode;
 import com.yin.coswee.util.ColorUtil;
@@ -14,6 +15,7 @@ import com.yin.coswee.util.ColorUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +40,10 @@ public class TreeNodeTransformer {
     public static TreeNode transMethodCost(Map<String,MethodCost> methodCostMap){
         TreeNode root = null;
         Map<String, TreeNode> treeNodeMap = new HashMap<String, TreeNode>();
+        Map<String, CallTimes> callTimesMap = new HashMap<String, CallTimes>();
         for (String key : methodCostMap.keySet()) {
             MethodCost methodCost = methodCostMap.get(key);
+            //转树节点
             TreeNode treeNode = transMethodCost(methodCost);
             treeNodeMap.put(methodCost.getKey(),treeNode);
             if(root == null){
@@ -48,7 +52,20 @@ public class TreeNodeTransformer {
                 TreeNode parent = treeNodeMap.get(methodCost.getFatherKey());
                 parent.addChild(treeNode);
             }
+            //转调用次数统计
+            final String methodName = methodCost.getFullName();
+            final int costOwn = methodCost.getCostOwn();
+            CallTimes callTimes = callTimesMap.get(methodName);
+            if(callTimes == null){
+                callTimes = new CallTimes(methodName);
+                callTimesMap.put(methodName, callTimes);
+            }
+            callTimes.addTimes();
+            callTimes.addCost(costOwn);
         }
+        //最后把消耗次数统计处理下,放到根节点里
+        assert root != null;
+        root.setCallTimesList(transCallTimes(callTimesMap));
         return root;
     }
     public static List<TreeNode> transMethodCost(List<Map<String,MethodCost>> methodCostMapList){
@@ -61,9 +78,24 @@ public class TreeNodeTransformer {
             treeNodeList.add(treeNode);
         }
         return treeNodeList;
-
     }
 
-
-
+    private static List<CallTimes> transCallTimes(Map<String, CallTimes> callTimesMap){
+        List<CallTimes> result = new ArrayList<CallTimes>();
+        for (String key : callTimesMap.keySet()) {
+            final CallTimes callTimes = callTimesMap.get(key);
+            if(callTimes.getTimes() > 1) {
+                result.add(callTimes);
+            }
+        }
+        if(result.size() == 0){
+            return null;
+        }
+        Collections.sort(result, new Comparator<CallTimes>() {
+            public int compare(CallTimes t1, CallTimes t2) {
+                return t2.getTimes() - t1.getTimes();
+            }
+        });
+        return result;
+    }
 }

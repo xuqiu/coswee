@@ -18,6 +18,10 @@ import javax.servlet.ServletContextListener;
  * @since 2017-08-11 16:41
  */
 public class CallChainAspectListener implements ServletContextListener {
+    public static boolean CONFIGURED = false;
+    public CallChainAspectListener(){
+        CONFIGURED =true;
+    }
     public static boolean WEB_STARTED = false;
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         WEB_STARTED = true;

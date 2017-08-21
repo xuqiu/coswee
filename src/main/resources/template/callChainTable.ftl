@@ -55,12 +55,41 @@
     <button id="btn_clear" type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Clear Data</button>
     <#list treeNodeJsonMap?keys as key>
         <div class="row">
+            <p>
+            <h2>${key}</h2>
+            <span id="btn_expand_${key_index}" class="glyphicon glyphicon-resize-full" aria-hidden="true"></span>
+            </p>
             <div>
-                <h2>${key}</h2>
-                <span id="btn_expand_${key_index}" class="glyphicon glyphicon-resize-full" aria-hidden="true"></span>
                 <div id="tree_${key_index}" class=""></div>
             </div>
         </div>
+        <#if treeNodeJsonMap[key].callTimesList??>
+        <div class="row">
+            <div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">High times calls</div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>method</th>
+                            <th>times</th>
+                            <th>cost</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <#list treeNodeJsonMap[key].callTimesList as callTimes>
+                            <tr>
+                                <td>${callTimes.shortName}</td>
+                                <td>${callTimes.times}</td>
+                                <td>${callTimes.cost}</td>
+                            </tr>
+                            </#list>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </#if>
         <script>
             var treeData_${key_index}=[${treeNodeJsonMap[key]?string}];
             $('#tree_${key_index}').treeview({
@@ -90,7 +119,7 @@
 <script>
     $('#btn_clear').on('click', function (e) {
         if (confirm("You sure wanna clear all data?")) {
-            $.get("./CallChainServlet?action=clear", function (result) {
+            $.get(window.location.href+"?action=clear", function (result) {
                 window.location.reload();
             });
         }

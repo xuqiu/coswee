@@ -8,14 +8,19 @@
         <aop:pointcut id="toInspect" expression="within(com.greenline..*)
                                             and !within(com.greenline.hrs.biz.external..*)
                                 and !within(com.greenline.hrs.biz.manager.external..*)
+
                                 and !within(com.greenline.hrs.register.spring..*)
-                                and !within(com.greenline.hrs.register.biz.dal.guid..*)
-                                and !within(com.greenline.hrs.register.biz.dal.util.mybatis..*)
                                 and !within(com.greenline.hrs.register.service.actor..*)
+
+                                and !@within(org.aspectj.lang.annotation.Aspect)
+                                and !@within(org.apache.ibatis.plugin.Intercepts)
+
+                                and !@within(com.greenline.hrs.hessian.HrsHessianServiceExporter)
+                                and !@within(com.greenline.framework.hessian.impl.SimpleAccesssManagerImpl)
+
         "/>
+        <!--and !within(com.greenline.hrs.register.biz.dal.guid..*)-->
         <aop:advisor advice-ref="callChainAspect" pointcut-ref="toInspect"/>
     </aop:config>
-
     <bean id="callChainAspect" class="com.yin.coswee.aspect.CallChainAspect"/>
-    <bean id="callChainController" class="com.yin.coswee.controller.CallChainController"/>
 </beans>

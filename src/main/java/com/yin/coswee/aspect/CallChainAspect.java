@@ -8,12 +8,14 @@
 package com.yin.coswee.aspect;
 
 import com.yin.coswee.listener.CallChainAspectListener;
+import com.yin.coswee.model.CallStatistics;
 import com.yin.coswee.model.MethodCost;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,10 +34,15 @@ import org.aopalliance.intercept.MethodInvocation;
  */
 public class CallChainAspect implements MethodInterceptor {
 
+    private static Map<String,CallStatistics> callStatisticsMap;
+
     private static List<Map<String,MethodCost>> allCallHis= Collections
         .synchronizedList(new ArrayList<Map<String,MethodCost>>());
     public static List<Map<String,MethodCost>> getAllCallHis(){
         return allCallHis;
+    }
+    public static Map<String,CallStatistics> getStatistics(){
+        return callStatisticsMap;
     }
     public static void clear(){
         allCallHis= Collections.synchronizedList(new ArrayList<Map<String,MethodCost>>());
@@ -59,7 +66,7 @@ public class CallChainAspect implements MethodInterceptor {
         }
     };
     public Object invoke(MethodInvocation method) throws Throwable {
-        if(! CallChainAspectListener.WEB_STARTED){
+        if(CallChainAspectListener.CONFIGURED && ! CallChainAspectListener.WEB_STARTED){
             return method.proceed();
         }
         //方法基本信息获取
@@ -133,6 +140,8 @@ public class CallChainAspect implements MethodInterceptor {
 
         System.out.println(treeSpace+typeName+"."+methodName + " 方法结束 执行时间:  "+ methodCostTime);
 
+        //记录统计信息
+        statistics(methodCost);
 
         return result;
     }
@@ -142,5 +151,25 @@ public class CallChainAspect implements MethodInterceptor {
             result.append("    ");
         }
         return result.toString();
+    }
+    private static void statistics(MethodCost methodCost){
+        final String fullName = methodCost.getFullName();
+        CallStatistics callStatistics = callStatisticsMap.get(fullName);
+        if(callStatistics == null){
+            callStatistics = new CallStatistics(fullName);
+            callStatistics.setRootInfo(new HashMap<String, CallStatistics>());
+            callStatisticsMap.put(fullName, callStatistics);
+        }
+        final int cost = methodCost.getCostOwn();
+        callStatistics.addCost(cost);
+        //设置根方法信息
+        final Map<String, CallStatistics> rootInfoMap = callStatistics.getRootInfo();
+        final String rootName = methodCost.getRootKey().split("#")[0];
+        CallStatistics rootStatistics = rootInfoMap.get(rootName);
+        if(rootStatistics == null){
+            rootStatistics = new CallStatistics(rootName);
+            rootInfoMap.put(rootName, rootStatistics);
+        }
+        rootStatistics.addCost(cost);
     }
 }

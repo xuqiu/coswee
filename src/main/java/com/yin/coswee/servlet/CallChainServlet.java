@@ -28,7 +28,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 /**
- * TODO
+ * servlet
  *
  * @author yinzhennan
  * @version V1.0
@@ -41,18 +41,20 @@ public class CallChainServlet  extends HttpServlet {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         final String action = request.getParameter("action");
-        if(action.equals("getMethodCostInfo")){
-            getMethodCostInfo(request, response);
-        }else if(action.equals("getTreeNode")){
-            getTreeNode(request, response);
-        }else if(action.equals("getPage")){
-            getPage(request, response);
-        }else if(action.equals("clear")){
+        if("getMethodCostInfo".equals(action)){
+            getMethodCostInfo(response);
+        }else if("getTreeNode".equals(action)){
+            getTreeNode(response);
+        }else if("getStatistics".equals(action)){
+            getStatistics(response);
+        }else if("clear".equals(action)){
             clear();
+        }else{
+            getPage(response);
         }
     }
 
-    private void getMethodCostInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void getMethodCostInfo(HttpServletResponse response) throws IOException {
         response.setHeader("Content-Type", "text/json; charset=utf-8");
 
         final PrintWriter writer = response.getWriter();
@@ -60,25 +62,31 @@ public class CallChainServlet  extends HttpServlet {
         writer.flush();
         writer.close();
     }
-    private void getTreeNode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void getTreeNode(HttpServletResponse response) throws IOException {
         response.setHeader("Content-Type", "text/json; charset=utf-8");
         final PrintWriter writer = response.getWriter();
         writer.print(JSON.toJSONString(TreeNodeTransformer.transMethodCost(CallChainAspect.getAllCallHis())));
         writer.flush();
         writer.close();
     }
-    private void getPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void getStatistics(HttpServletResponse response) throws IOException {
+        response.setHeader("Content-Type", "text/json; charset=utf-8");
+        final PrintWriter writer = response.getWriter();
+        writer.print(JSON.toJSONString(CallChainAspect.getStatistics()));
+        writer.flush();
+        writer.close();
+    }
+    private void getPage(HttpServletResponse response) throws IOException {
         response.setHeader("Content-Type", "text/html; charset=utf-8");
 
         Template t = FreeMakerUtil.createTemplate("callChainTable.ftl");
         try {
             Map<String, Object> map = new HashMap<String, Object>();
             final List<TreeNode> treeNodeList = TreeNodeTransformer.transMethodCost(CallChainAspect.getAllCallHis());
-            Map<String, String> treeNodeJsonMap = new LinkedHashMap<String, String>();
+            Map<String, TreeNode> treeNodeJsonMap = new LinkedHashMap<String, TreeNode>();
             for (TreeNode treeNode : treeNodeList) {
-                treeNodeJsonMap.put(treeNode.getThreadName(), JSON.toJSONString(treeNode));
+                treeNodeJsonMap.put(treeNode.getThreadName(), treeNode);
             }
-
             map.put("treeNodeJsonMap", treeNodeJsonMap);
             t.process(map, response.getWriter());
         } catch (TemplateException e) {
