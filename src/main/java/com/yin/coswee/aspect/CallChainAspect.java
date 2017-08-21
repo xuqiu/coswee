@@ -34,7 +34,8 @@ import org.aopalliance.intercept.MethodInvocation;
  */
 public class CallChainAspect implements MethodInterceptor {
 
-    private static Map<String,CallStatistics> callStatisticsMap;
+    private static Map<String,CallStatistics> callStatisticsMap = Collections
+        .synchronizedMap(new HashMap<String, CallStatistics>());
 
     private static List<Map<String,MethodCost>> allCallHis= Collections
         .synchronizedList(new ArrayList<Map<String,MethodCost>>());

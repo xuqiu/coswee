@@ -15,8 +15,8 @@
                                 and !@within(org.aspectj.lang.annotation.Aspect)
                                 and !@within(org.apache.ibatis.plugin.Intercepts)
 
-                                and !@within(com.greenline.hrs.hessian.HrsHessianServiceExporter)
-                                and !@within(com.greenline.framework.hessian.impl.SimpleAccesssManagerImpl)
+                                and !within(com.greenline.hrs.hessian.HrsHessianServiceExporter)
+                                and !within(com.greenline.framework.hessian.impl.SimpleAccesssManagerImpl)
 
         "/>
         <!--and !within(com.greenline.hrs.register.biz.dal.guid..*)-->
