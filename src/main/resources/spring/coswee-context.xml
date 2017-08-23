@@ -19,6 +19,7 @@
                                 and !within(com.greenline.framework.hessian.impl.SimpleAccesssManagerImpl)
 
         "/>
+
         <!--and !within(com.greenline.hrs.register.biz.dal.guid..*)-->
         <aop:advisor advice-ref="callChainAspect" pointcut-ref="toInspect"/>
     </aop:config>

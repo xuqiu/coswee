@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2001-2017 GuaHao.com Corporation Limited. All rights reserved. 
+ * Copyright (c) 2001-2017 Github.com Corporation Limited. All rights reserved.
  * This software is the confidential and proprietary information of GuaHao Company. 
  * ("Confidential Information"). 
  * You shall not disclose such Confidential Information and shall use it only 
- * in accordance with the terms of the license agreement you entered into with GuaHao.com.
+ * in accordance with the terms of the license agreement you entered into with Github.com.
  */
 package com.yin.coswee.servlet;
 
 import com.alibaba.fastjson.JSON;
 import com.yin.coswee.aspect.CallChainAspect;
+import com.yin.coswee.model.CallStatistics;
 import com.yin.coswee.model.TreeNode;
 import com.yin.coswee.model.transform.TreeNodeTransformer;
 import com.yin.coswee.util.FreeMakerUtil;
@@ -47,6 +48,8 @@ public class CallChainServlet  extends HttpServlet {
             getTreeNode(response);
         }else if("getStatistics".equals(action)){
             getStatistics(response);
+        }else if("getStatisticsPage".equals(action)){
+            getStatisticsPage(response);
         }else if("clear".equals(action)){
             clear();
         }else{
@@ -88,6 +91,19 @@ public class CallChainServlet  extends HttpServlet {
                 treeNodeJsonMap.put(treeNode.getThreadName(), treeNode);
             }
             map.put("treeNodeJsonMap", treeNodeJsonMap);
+            t.process(map, response.getWriter());
+        } catch (TemplateException e) {
+            e.printStackTrace();
+        }
+    }
+    private void getStatisticsPage(HttpServletResponse response) throws IOException {
+        response.setHeader("Content-Type", "text/html; charset=utf-8");
+
+        Template t = FreeMakerUtil.createTemplate("statistics.ftl");
+        try {
+            Map<String, Object> map = new HashMap<String, Object>();
+            final Map<String, CallStatistics> statistics = CallChainAspect.getStatistics();
+            map.put("statistics", statistics.values());
             t.process(map, response.getWriter());
         } catch (TemplateException e) {
             e.printStackTrace();

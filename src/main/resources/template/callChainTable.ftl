@@ -11,6 +11,7 @@
     <script src="http://jonmiles.github.io/bootstrap-treeview/bower_components/jquery/dist/jquery.js"></script>
     <#--<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
     <script src="http://jonmiles.github.io/bootstrap-treeview/js/bootstrap-treeview.js"></script>
+    <script src="https://kryogenix.org/code/browser/sorttable/sorttable.js"></script>
     <style type="text/css" id="treeview1-style"> .treeview .list-group-item {
         cursor: pointer
     }
@@ -53,6 +54,7 @@
 <div class="container">
     <button id="btn_reload" type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Reload Data</button>
     <button id="btn_clear" type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Clear Data</button>
+    <button id="btn_statistics" type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Show Method Statistics</button>
     <#list treeNodeJsonMap?keys as key>
         <div class="row">
             <p>
@@ -68,7 +70,7 @@
             <div>
                 <div class="panel panel-default">
                     <div class="panel-heading">High times calls</div>
-                    <table class="table">
+                    <table class="table sortable table-hover">
                         <thead>
                         <tr>
                             <th>method</th>
@@ -126,6 +128,9 @@
     });
     $('#btn_reload').on('click', function (e) {
         window.location.reload();
+    });
+    $('#btn_statistics').on('click', function (e) {
+        window.location.href = window.location.href+"?action=getStatisticsPage";
     });
 </script>
 </html>
