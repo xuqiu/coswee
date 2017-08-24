@@ -50,7 +50,8 @@ public class ColorUtil {
     public static String getTimeCostColor(int costTime){
         if(costTime <= 1) costTime = 1;
         final Double lvl = Math.log(Double.valueOf(costTime + ""));
-        final String levelColor = getLevelColor("#61C400", "#FF0000", lvl.intValue() - 1);
+        //final String levelColor = getLevelColor("#61C400", "#FF0000", lvl.intValue() - 1);//绿红
+        final String levelColor = getLevelColor("#FFFFFF", "#563d7c", lvl.intValue() - 1);//白紫
         return levelColor;//getLevelColor(levelColor, "#FFFF55", 5);
     }
 

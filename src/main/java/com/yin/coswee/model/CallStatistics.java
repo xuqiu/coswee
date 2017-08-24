@@ -22,7 +22,7 @@ import java.util.Map;
 public class CallStatistics {
     private String name;
     private int times;
-    private int minCost;
+    private int minCost = 1000000;
     private int maxCost;
     private int allCost;
     //根信息,key和name为调用此方法的入口方法,统计数字为此方法的消耗情况
