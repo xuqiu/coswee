@@ -48,8 +48,6 @@ public class CallChainServlet  extends HttpServlet {
             getTreeNode(response);
         }else if("getStatistics".equals(action)){
             getStatistics(response);
-        }else if("getStatisticsPage".equals(action)){
-            getStatisticsPage(response);
         }else if("clear".equals(action)){
             clear();
         }else{
@@ -84,26 +82,20 @@ public class CallChainServlet  extends HttpServlet {
 
         Template t = FreeMakerUtil.createTemplate("callChainTable.ftl");
         try {
+
             Map<String, Object> map = new HashMap<String, Object>();
+            //调用连信息
             final List<TreeNode> treeNodeList = TreeNodeTransformer.transMethodCost(CallChainAspect.getAllCallHis());
             Map<String, TreeNode> treeNodeJsonMap = new LinkedHashMap<String, TreeNode>();
             for (TreeNode treeNode : treeNodeList) {
                 treeNodeJsonMap.put(treeNode.getThreadName(), treeNode);
             }
             map.put("treeNodeJsonMap", treeNodeJsonMap);
-            t.process(map, response.getWriter());
-        } catch (TemplateException e) {
-            e.printStackTrace();
-        }
-    }
-    private void getStatisticsPage(HttpServletResponse response) throws IOException {
-        response.setHeader("Content-Type", "text/html; charset=utf-8");
 
-        Template t = FreeMakerUtil.createTemplate("statistics.ftl");
-        try {
-            Map<String, Object> map = new HashMap<String, Object>();
+            //统计信息
             final Map<String, CallStatistics> statistics = CallChainAspect.getStatistics();
             map.put("statistics", statistics.values());
+
             t.process(map, response.getWriter());
         } catch (TemplateException e) {
             e.printStackTrace();
