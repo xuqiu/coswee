@@ -29,6 +29,7 @@ public class MethodCost implements java.io.Serializable {
     String methodName;
     String typeName;
     String key;
+    String sql;
     int index;
     int deep;
     int costAll;
@@ -132,5 +133,13 @@ public class MethodCost implements java.io.Serializable {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getSql() {
+        return sql;
+    }
+
+    public void setSql(String sql) {
+        this.sql = sql;
     }
 }

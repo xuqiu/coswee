@@ -20,12 +20,14 @@ import java.util.List;
  * @version V1.0
  * @since 2017-08-15 16:53
  */
+@SuppressWarnings("unused")
 public class TreeNode {
     private String text;
     private String icon;
     private String color;
     private String backColor;
     private String href;
+    private String sql;
     private List<String> tags;
     private List<TreeNode> nodes = new ArrayList<TreeNode>();
 
@@ -35,6 +37,11 @@ public class TreeNode {
     private String threadName;
     @JSONField(serialize=false)
     private List<CallTimes> callTimesList;
+
+    public TreeNode(){}
+    public TreeNode(String text){
+        this.text = text;
+    }
 
     public void addChild(TreeNode child){
         nodes.add(child);
@@ -96,7 +103,13 @@ public class TreeNode {
         this.nodes = nodes;
     }
 
+    public String getSql() {
+        return sql;
+    }
 
+    public void setSql(String sql) {
+        this.sql = sql;
+    }
 
     public TreeNode getParent() {
         return parent;

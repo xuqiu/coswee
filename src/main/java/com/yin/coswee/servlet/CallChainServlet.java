@@ -12,10 +12,16 @@ import com.yin.coswee.aspect.CallChainAspect;
 import com.yin.coswee.model.CallStatistics;
 import com.yin.coswee.model.TreeNode;
 import com.yin.coswee.model.transform.TreeNodeTransformer;
+import com.yin.coswee.util.FileUtil;
 import com.yin.coswee.util.FreeMakerUtil;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -82,25 +88,47 @@ public class CallChainServlet  extends HttpServlet {
 
         Template t = FreeMakerUtil.createTemplate("callChainTable.ftl");
         try {
-
-            Map<String, Object> map = new HashMap<String, Object>();
-            //调用连信息
-            final List<TreeNode> treeNodeList = TreeNodeTransformer.transMethodCost(CallChainAspect.getAllCallHis());
-            Map<String, TreeNode> treeNodeJsonMap = new LinkedHashMap<String, TreeNode>();
-            for (TreeNode treeNode : treeNodeList) {
-                treeNodeJsonMap.put(treeNode.getThreadName(), treeNode);
-            }
-            map.put("treeNodeJsonMap", treeNodeJsonMap);
-
-            //统计信息
-            final Map<String, CallStatistics> statistics = CallChainAspect.getStatistics();
-            map.put("statistics", statistics.values());
-
+            Map<String, Object> map = getMethodInfoMap();
             t.process(map, response.getWriter());
         } catch (TemplateException e) {
             e.printStackTrace();
         }
     }
+
+    public static void writePage(String fullPath){
+        FileUtil.checkPath(fullPath);
+        Writer out = null;
+        try {
+            out = new OutputStreamWriter(new FileOutputStream(fullPath), "UTF-8");
+            Template t = FreeMakerUtil.createTemplate("callChainTable.ftl");
+            //输出文件
+            Map<String, Object> map = getMethodInfoMap();
+            t.process(map, out);
+        } catch (UnsupportedEncodingException e) {
+            //never happened
+        } catch (Exception e) {
+            throw new IllegalArgumentException("路径不正确,创建路径或文件失败:", e);
+        }
+
+    }
+
+    private static Map<String, Object> getMethodInfoMap() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        //调用连信息
+        final List<TreeNode> treeNodeList = TreeNodeTransformer.transMethodCost(CallChainAspect.getAllCallHis());
+        Map<String, TreeNode> treeNodeJsonMap = new LinkedHashMap<String, TreeNode>();
+        for (int i = 0; i < treeNodeList.size() && i < 50; i++) {
+            TreeNode treeNode = treeNodeList.get(i);
+            treeNodeJsonMap.put(treeNode.getThreadName(), treeNode);
+        }
+        map.put("treeNodeJsonMap", treeNodeJsonMap);
+
+        //统计信息
+        final Map<String, CallStatistics> statistics = CallChainAspect.getStatistics();
+        map.put("statistics", statistics.values());
+        return map;
+    }
+
     private void clear(){
         CallChainAspect.clear();
     }

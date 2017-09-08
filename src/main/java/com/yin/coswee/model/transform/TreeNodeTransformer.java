@@ -28,10 +28,12 @@ import java.util.Map;
  * @since 2017-08-15 17:02
  */
 public class TreeNodeTransformer {
+    private static final int MAX_NODE_NUM = 100;
     public static TreeNode transMethodCost(MethodCost methodCost){
         TreeNode treeNode = new TreeNode();
         treeNode.setThreadName(methodCost.getThreadName());
         treeNode.setText(methodCost.getFullName());
+        treeNode.setSql(methodCost.getSql());
         treeNode.setTags(Arrays.asList(String.valueOf(methodCost.getCostAll()),String.valueOf(methodCost.getCostOwn())));
         treeNode.setBackColor(ColorUtil.getTimeCostColor(methodCost.getCostOwn()));
         return treeNode;
@@ -41,22 +43,28 @@ public class TreeNodeTransformer {
         TreeNode root = null;
         Map<String, TreeNode> treeNodeMap = new HashMap<String, TreeNode>();
         Map<String, CallTimes> callTimesMap = new HashMap<String, CallTimes>();
+        int nodeNum = 0;
         for (String key : methodCostMap.keySet()) {
+            nodeNum ++ ;
             MethodCost methodCost = methodCostMap.get(key);
             //转树节点
             TreeNode treeNode = transMethodCost(methodCost);
-            treeNodeMap.put(methodCost.getKey(),treeNode);
-            if(root == null){
+            treeNodeMap.put(methodCost.getKey(), treeNode);
+            if (root == null) {
                 root = treeNode;
-            }else{
+            } else {
                 TreeNode parent = treeNodeMap.get(methodCost.getFatherKey());
-                parent.addChild(treeNode);
+                if(nodeNum < MAX_NODE_NUM) {
+                    parent.addChild(treeNode);
+                }else if(nodeNum == MAX_NODE_NUM){
+                    parent.addChild(new TreeNode("节点过多,不再显示更多节点..."));
+                }
             }
             //转调用次数统计
             final String methodName = methodCost.getFullName();
             final int costOwn = methodCost.getCostOwn();
             CallTimes callTimes = callTimesMap.get(methodName);
-            if(callTimes == null){
+            if (callTimes == null) {
                 callTimes = new CallTimes(methodName);
                 callTimesMap.put(methodName, callTimes);
             }
