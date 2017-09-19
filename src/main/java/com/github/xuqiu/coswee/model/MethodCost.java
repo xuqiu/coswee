@@ -12,7 +12,7 @@
  * accordance with the terms of the license agreement you entered into
  * with Greenline.com.
  */
-package com.yin.coswee.model;
+package com.github.xuqiu.coswee.model;
 
 /**
  * 方法消耗

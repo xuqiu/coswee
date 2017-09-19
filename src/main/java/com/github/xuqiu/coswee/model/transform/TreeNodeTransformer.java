@@ -5,12 +5,12 @@
  * You shall not disclose such Confidential Information and shall use it only 
  * in accordance with the terms of the license agreement you entered into with Github.com.
  */
-package com.yin.coswee.model.transform;
+package com.github.xuqiu.coswee.model.transform;
 
-import com.yin.coswee.model.CallTimes;
-import com.yin.coswee.model.MethodCost;
-import com.yin.coswee.model.TreeNode;
-import com.yin.coswee.util.ColorUtil;
+import com.github.xuqiu.coswee.model.MethodCost;
+import com.github.xuqiu.coswee.model.TreeNode;
+import com.github.xuqiu.coswee.model.CallTimes;
+import com.github.xuqiu.coswee.util.ColorUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;

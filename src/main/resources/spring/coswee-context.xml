@@ -24,7 +24,7 @@
         <!--and !within(com.greenline.hrs.register.biz.dal.guid..*)-->
         <aop:advisor advice-ref="callChainAspect" pointcut-ref="toInspect"/>
     </aop:config>
-    <bean id="callChainAspect" class="com.yin.coswee.aspect.CallChainAspect">
+    <bean id="callChainAspect" class="com.github.xuqiu.coswee.aspect.CallChainAspect">
         <property name="logAble" value="false"/>
     </bean>
 </beans>

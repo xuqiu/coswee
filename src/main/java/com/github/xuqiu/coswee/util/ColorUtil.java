@@ -5,7 +5,7 @@
  * You shall not disclose such Confidential Information and shall use it only 
  * in accordance with the terms of the license agreement you entered into with Github.com.
  */
-package com.yin.coswee.util;
+package com.github.xuqiu.coswee.util;
 
 import java.math.BigInteger;
 

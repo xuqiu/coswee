@@ -5,11 +5,11 @@
  * You shall not disclose such Confidential Information and shall use it only 
  * in accordance with the terms of the license agreement you entered into with Github.com.
  */
-package com.yin.coswee.aspect;
+package com.github.xuqiu.coswee.aspect;
 
-import com.yin.coswee.listener.CallChainAspectListener;
-import com.yin.coswee.model.CallStatistics;
-import com.yin.coswee.model.MethodCost;
+import com.github.xuqiu.coswee.listener.CallChainAspectListener;
+import com.github.xuqiu.coswee.model.MethodCost;
+import com.github.xuqiu.coswee.model.CallStatistics;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -46,6 +46,8 @@ public class CallChainAspect implements MethodInterceptor {
 
     private boolean logAble = true;
     private boolean onlyStatistics = false;
+    private boolean onlyLongest = false;
+    private static int longestCost = 0;//所有调用链里耗时最长的
 
     public void setLogAble(boolean logAble) {
         this.logAble = logAble;
@@ -53,6 +55,10 @@ public class CallChainAspect implements MethodInterceptor {
 
     public void setOnlyStatistics(boolean onlyStatistics) {
         this.onlyStatistics = onlyStatistics;
+    }
+
+    public void setOnlyLongest(boolean onlyLongest) {
+        this.onlyLongest = onlyLongest;
     }
 
     private static Map<String,CallStatistics> callStatisticsMap = Collections
@@ -69,6 +75,7 @@ public class CallChainAspect implements MethodInterceptor {
     public static void clear(){
         allCallHis= Collections.synchronizedList(new ArrayList<Map<String,MethodCost>>());
         callStatisticsMap = Collections.synchronizedMap(new HashMap<String, CallStatistics>());
+        longestCost = 0;
     }
 
 
@@ -167,6 +174,17 @@ public class CallChainAspect implements MethodInterceptor {
 
         if(logAble) {
             System.out.println(treeSpace + typeName + "." + methodName + " 方法结束 执行时间:  " + methodCostTime);
+        }
+
+        //只保留请求时间最长的调用链
+        if(onlyLongest && deep==0){
+            if(methodCost.getCostAll() > longestCost){
+                longestCost = methodCost.getCostAll();
+                allCallHis.clear();
+                allCallHis.add(methodCostMapTL.get());
+            }else {
+                allCallHis.remove(methodCostMapTL.get());
+            }
         }
 
         //记录统计信息

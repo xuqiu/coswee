@@ -5,12 +5,9 @@
  * You shall not disclose such Confidential Information and shall use it only 
  * in accordance with the terms of the license agreement you entered into with Github.com.
  */
-package com.yin.coswee.model;
+package com.github.xuqiu.coswee.model;
 
-import com.yin.coswee.util.StringUtil;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.github.xuqiu.coswee.util.StringUtil;
 
 /**
  * 调用次数统计类

@@ -5,17 +5,16 @@
  * You shall not disclose such Confidential Information and shall use it only 
  * in accordance with the terms of the license agreement you entered into with Github.com.
  */
-package com.yin.coswee.servlet;
+package com.github.xuqiu.coswee.servlet;
 
 import com.alibaba.fastjson.JSON;
-import com.yin.coswee.aspect.CallChainAspect;
-import com.yin.coswee.model.CallStatistics;
-import com.yin.coswee.model.TreeNode;
-import com.yin.coswee.model.transform.TreeNodeTransformer;
-import com.yin.coswee.util.FileUtil;
-import com.yin.coswee.util.FreeMakerUtil;
+import com.github.xuqiu.coswee.aspect.CallChainAspect;
+import com.github.xuqiu.coswee.model.TreeNode;
+import com.github.xuqiu.coswee.model.transform.TreeNodeTransformer;
+import com.github.xuqiu.coswee.model.CallStatistics;
+import com.github.xuqiu.coswee.util.FileUtil;
+import com.github.xuqiu.coswee.util.FreeMakerUtil;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;

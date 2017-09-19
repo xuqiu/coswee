@@ -129,6 +129,7 @@
                                 <th>Min Cost</th>
                                 <th>Max Cost</th>
                                 <th>All Cost</th>
+                                <th>Unstable</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -141,6 +142,7 @@
                                 <td>${call.minCost}</td>
                                 <td>${call.maxCost}</td>
                                 <td>${call.allCost}</td>
+                                <td>${(call.maxCost + 100)/ (call.minCost+100)}</td>
                             </tr>
 
                             <script>

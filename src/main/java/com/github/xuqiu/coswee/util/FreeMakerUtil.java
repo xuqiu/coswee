@@ -12,7 +12,7 @@
  * accordance with the terms of the license agreement you entered into
  * with Greenline.com.
  */
-package com.yin.coswee.util;
+package com.github.xuqiu.coswee.util;
 
 import java.io.File;
 import java.io.IOException;
