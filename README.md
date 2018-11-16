@@ -10,7 +10,7 @@ show the program call chains intuitively, for costing analyze
 
 *****
 
-# Hot to use
+# How to use
 ##### add dependency
 <pre><code>
     &lt;dependency&gt;
