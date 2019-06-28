@@ -14,7 +14,7 @@ show the program call chains intuitively, for costing analyze
 ##### add dependency
 <pre><code>
     &lt;dependency&gt;
-        &lt;groupId&gt;com.github.xuqiuj&lt;/groupId&gt;
+        &lt;groupId&gt;com.github.xuqiu&lt;/groupId&gt;
         &lt;artifactId&gt;coswee&lt;/artifactId&gt;
         &lt;scope&gt;test&lt;/scope&gt;
     &lt;/dependency&gt;
