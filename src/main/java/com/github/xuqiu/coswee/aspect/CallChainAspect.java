@@ -95,6 +95,10 @@ public class CallChainAspect implements MethodInterceptor {
             return new Stack<String>();
         }
     };
+
+    public CallChainAspect(){
+        System.out.println("切片创建成功");
+    }
     public Object invoke(MethodInvocation method) throws Throwable {
         if(CallChainAspectListener.CONFIGURED && ! CallChainAspectListener.WEB_STARTED){
             return method.proceed();

@@ -20,6 +20,16 @@ show the program call chains intuitively, for costing analyze
     &lt;/dependency&gt;
 </code></pre>
 
+##### for spring boot case
+
+1, setup application.yml
+<pre><code>coswee:
+  pointcut: within(com.yourcom..*)</code></pre>
+2, boot up you app and visit yoursite/coswee like http://localhost:8080/coswee
+ 
+ 
+
+
 ##### for junit case
 
 <pre><code>    @Test
